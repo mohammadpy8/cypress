@@ -57,6 +57,21 @@ describe("assertion1", () =>{
 
         cy.get("button[type='submit']").click() /////Login website//////
 
+        let expName = "Paul Collings";
+
+        cy.get(".oxd-userdropdown-name").then((x) => {
+            let actName = x.text()
+
+            ///BDD styles
+
+            expect(actName).to.equal(expName)
+            expect(actName).to.not.equal(expName)
+
+            ///TDD styles
+
+            assert.equal(actName, expName)
+            assert.notEqual(actName, expName)
+        })
 
     })
 
