@@ -48,6 +48,18 @@ describe("drop", () => {
 
     it("google", function() {
         cy.visit("https://www.google.com")
+
+        cy.get("div").should("have.length", 11)
+
+        cy.wait(3000);
+
+        cy.get("div.dd").each(($el, index, $list) => {
+            if($el.text() === "") {
+                cy.wrap($el).click()
+            }
+        })
+
+        cy.get("div").should("have.value", "delkhahe")
     })
 
 })
