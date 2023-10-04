@@ -85,7 +85,7 @@ describe("handle table ", () => {
                     .each(($row, index, $rows) => {
                         cy.wrap($row).within(() => {
                             cy.get("td:nth-child(3)").then(e => {
-                                const message = e.text();
+                                const message = e.text(); ///text email in td
                                 cy.log(message);  ///email into table/////
                             })
                         })
