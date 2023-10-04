@@ -72,7 +72,9 @@ describe("handle table ", () => {
 
         let pages = 5;
         for(let p=1; p<=pages;p++) {
+
             if(pages>1) {
+                
                 cy.log(`total pages is  =>> ${p}`);
 
                 cy.get(`ul[class='pagination']>li:nth-child(${p})`).click()
