@@ -30,6 +30,7 @@ describe("custom", function() {
         cy.visit(BASE_URL);
 
         cy.clickLinks("Log in");
+        cy.wait(3000);
         cy.loginapp("m@gmail.com", "123456");
 
         cy.get(".ico-account").should("have.text", "My account");
