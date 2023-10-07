@@ -118,7 +118,12 @@ describe("login", () => {
                   });
                 }
               });
-            });
+            })
+            .then(() => {
+                const handleSelect = () => {
+
+                }
+            })
           });
         });
       });
