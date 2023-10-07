@@ -10,57 +10,57 @@
 //
 //
 // -- This is a parent command --
-Cypress.Commands.add('login', (email, password) => {})
-//
-//
-// -- This is a child command --
-Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => {})
-//
-//
-// -- This is a dual command --
-Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => {})
-//
-//
-// -- This will overwrite an existing command --
-Cypress.Commands.overwrite('visit', (originalFn, url, options) => {})
+// Cypress.Commands.add('login', (email, password) => {})
+// //
+// //
+// // -- This is a child command --
+// Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => {})
+// //
+// //
+// // -- This is a dual command --
+// Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => {})
+// //
+// //
+// // -- This will overwrite an existing command --
+// Cypress.Commands.overwrite('visit', (originalFn, url, options) => {})
 
-/// <reference types="Cypress" />
-/// <reference types="cypress-xpath" />
+// /// <reference types="Cypress" />
+// /// <reference types="cypress-xpath" />
 
-Cypress.Commands.add("getIframe", (iframe) => {
+// Cypress.Commands.add("getIframe", (iframe) => {
 
-    return cy.get(iframe)
-        .its("0.contentDocument.body")
-        .should("be.visible")
-        .then(cy.wrap);
+//     return cy.get(iframe)
+//         .its("0.contentDocument.body")
+//         .should("be.visible")
+//         .then(cy.wrap);
 
-})
+// })
 
-Cypress.Commands.add("clickLinks", (label) => {
+// Cypress.Commands.add("clickLinks", (label) => {
 
-    cy.get("a").contains(label).click()
+//     cy.get("a").contains(label).click()
 
-})
+// })
 
-Cypress.Commands.overwrite("contains", (originalFn, subject, filter, text, options = {}) => {
+// Cypress.Commands.overwrite("contains", (originalFn, subject, filter, text, options = {}) => {
 
-    if(typeof text === "object") {
-        options = text;
-        text = filter;
-        filter = undefined;
-    };
+//     if(typeof text === "object") {
+//         options = text;
+//         text = filter;
+//         filter = undefined;
+//     };
 
-    options.matchCase = false;
+//     options.matchCase = false;
 
-    return originalFn(subject, filter, text, options);
+//     return originalFn(subject, filter, text, options);
 
-})
+// })
 
-Cypress.Commands.add("loginapp", (email, password) => {
+// Cypress.Commands.add("loginapp", (email, password) => {
 
-    cy.visit("#Email").type(email);
-    cy.visit("#Password").type(password);
+//     cy.visit("#Email").type(email);
+//     cy.visit("#Password").type(password);
 
-    cy.get(".button-1.login-button").click();
+//     cy.get(".button-1.login-button").click();
 
-})
+// })
