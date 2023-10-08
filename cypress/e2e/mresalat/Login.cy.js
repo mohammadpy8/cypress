@@ -82,7 +82,7 @@ describe("login", () => {
 
         cy.wait(500);
 
-        cy.get("input[type='text']").click().type(mqr);
+        cy.get(".confirm_input_mqr").click().type(mqr);
 
         cy.wait(500);
 
@@ -118,15 +118,60 @@ describe("login", () => {
                   });
                 }
               });
-            })
-            .then(() => {
-                const handleSelect = () => {
+            }).then(() => {
+              let price = 50000;
+              cy.get("input[label='ام اقساط پلاس']").click();
+              cy.wait(500);
+              cy.get(".input_mqr_credit").type(price);
+              cy.wait(500);
+              cy.get("div[class='p-2']").click({ force: true });
+              cy.wait(1000);
 
+              cy.wait(500);
+              cy.get(".aghsat-plus").click();
+              cy.wait(500);
+              cy.get(".aghsat-plus").then(($el) => {
+                if ($el.find("#react-select-3-listbox").length > 0) {
+                  haseCreaditPlus = true;
+                  console.log(haseCreaditPlus);
+                  cy.get(
+                    "#react-select-3-option-0 > div > :nth-child(1)"
+                  ).click({ force: true });
+                  cy.wait(500);
+                  cy.get(
+                    "button[class='sc-bczRLJ VtMnX confirm_Mqr_btn_active']"
+                  ).click({ force: true });
+
+                  cy.window().then((getNatioalCode) => {
+                    const userInfos = JSON.parse(
+                      getNatioalCode.localStorage.getItem("userInfo")
+                    );
+                    console.log(userInfos);
+                    cy.wait(500);
+                    cy.get(".Input_cnfPayment_modal_one")
+                      .type(userInfos.nationalCode)
+                      .invoke("val")
+                      .then((lengthVal) => {
+                        if (lengthVal.length === 10) {
+                          cy.contains("دریافت کد تایید").click({ force: true });
+                        }
+                      });
+                  });
+
+                  cy.wait(500);
+
+                  cy.get(
+                    ":nth-child(4) > :nth-child(1) > .modal > #modalFadeOut > .modal-content > .modal-custom-component-header > .sc-gsnTZi"
+                  ).click({ force: true });
+
+                  cy.wait(500);
                 }
-            })
+              });
+            });
           });
         });
       });
     });
+    cy.visit(BASE_URL);
   });
 });
