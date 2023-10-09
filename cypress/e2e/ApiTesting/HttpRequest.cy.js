@@ -176,4 +176,23 @@ describe("api", () => {
         expect(response.body.created).to.eq(true);
     })
   })
+
+  it.only("fetch orders", () => {
+
+    cy.request({
+        method: "GET",
+        url: accessToken,
+        headers: {
+            "Content-Types" : "application/json",
+            "Authorization": `Bearer ${AuthToken}`,
+        },
+        cookies: {
+            "cookieName": "mycookie"
+        }
+    })
+    .then(response => {
+        expect(response.status).to.eq(200);
+        expect(response.body).has.length(1);
+    })
+  })
 });
