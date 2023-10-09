@@ -193,7 +193,7 @@ describe("api", () => {
     });
   });
 
-  it.only("parsing json", () => {
+  it("parsing json", () => {
     cy.request({
       method: "GET",
       url: storeApi,
@@ -204,7 +204,7 @@ describe("api", () => {
     });
   });
 
-  it.only("complex parsing json", () => {
+  it("complex parsing json", () => {
     const limitQs = { limit: 5 };
     let totalPrice = 0;
 
@@ -223,7 +223,7 @@ describe("api", () => {
     });
   });
 
-  it.only("basic authentication", () => {
+  it("basic authentication", () => {
     cy.request({
       method: "GET",
       url: baseAuth,
@@ -238,7 +238,7 @@ describe("api", () => {
     });
   });
 
-  it.only("digest auth", () => {
+  it("digest auth", () => {
     cy.request({
       method: "GET",
       url: baseAuth,
@@ -287,6 +287,26 @@ describe("api", () => {
         } else {
             console.log("error");
         }
+    })
+  });
+
+  it.only("fetching", () => {
+
+    const url = ["posts", "todos", "albums", "users"]
+
+    const randomIndex = (max) => {
+        return Math.floor(Math.random() * max) + 1;
+    };
+
+    const BASE_URL = "https://jsonplaceholder.typicode.com";
+
+    cy.request({
+        method: "GET",
+        url: `${BASE_URL}/${url[randomIndex(3)]}`
+    })
+    .then(response => {
+        console.log(response.body);
+        expect(response.status).to.eq(200);
     })
   })
 });
