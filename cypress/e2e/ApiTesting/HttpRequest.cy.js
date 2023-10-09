@@ -7,6 +7,8 @@ describe("api", () => {
   const accessTokenUrl = "https://simple-books-api.glitch.me/api-clients/";
   const accessToken = "https://simple-books-api.glitch.me/orders/";
   const storeApi = "https://fakestoreapi.com/products";
+  const baseAuth = "https://postman-echo.com/basic-auth";
+  const bearerAccessToken = "https://api.github.com/user/repos";
 
   it("httprequest GET", () => {
     cy.request("GET", `${baseurl}1`).its("status").should("equal", 200);
@@ -213,11 +215,56 @@ describe("api", () => {
     }).then((response) => {
       expect(response.status).to.eq(200);
 
-      response.body.forEach(items => {
+      response.body.forEach((items) => {
         totalPrice += items.price;
         console.log(totalPrice);
-      })
-      expect(totalPrice).to.eq(899.23)
+      });
+      expect(totalPrice).to.eq(899.23);
+    });
+  });
+
+  it.only("basic authentication", () => {
+    cy.request({
+      method: "GET",
+      url: baseAuth,
+      auth: {
+        user: "postman",
+        password: "password",
+      },
+    }).then((response) => {
+      expect(response.status).to.eq(200);
+
+      expect(response.body.authenticated).to.equal(true);
+    });
+  });
+
+  it.only("digest auth", () => {
+    cy.request({
+      method: "GET",
+      url: baseAuth,
+      auth: {
+        username: "postman",
+        password: "password",
+        method: "degest",
+      },
+    }).then((response) => {
+      expect(response.status).to.eq(200);
+
+      expect(response.body.authenticated).to.equal(true);
+    });
+  });
+
+  it.only("Bearer access token", () => {
+    const token = "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";
+
+    cy.request({
+      method: "GET",
+      url: bearerAccessToken,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }).then((response) => {
+      expect(response.status).to.eq(200);
     });
   });
 });
