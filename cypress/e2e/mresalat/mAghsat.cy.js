@@ -66,14 +66,16 @@ describe("aghsat", () => {
 
     cy.origin(MHESAM_URL, () => {
       let checkDisbleATT;
-      cy.get('a[href="/MAghsatHesan"]').click({ force: true }); 
+      cy.get('a[href="/MAghsatHesan"]').click({ force: true });
 
       cy.wait(500);
-    //   cy.pause();
+      //   cy.pause();
 
-    //   cy.wait(500);
+      //   cy.wait(500);
 
-    cy.get(':nth-child(1) > .col-12 > .mt-2.d-flex > .btn-primary-hesan').click()
+      cy.get(
+        ":nth-child(1) > .col-12 > .mt-2.d-flex > .btn-primary-hesan"
+      ).click();
 
       cy.get(".btn-apply-mhesam-credit")
         .should(($btn) => {
@@ -106,7 +108,7 @@ describe("aghsat", () => {
               if (checkDisbleATT) {
                 alert("غیرفعال است");
               } else {
-                cy.get('.mx-auto').click({ force: true });
+                cy.get(".mx-auto").click({ force: true });
                 cy.get(".amount-money-container").type(amount);
                 cy.get(".btn-primary-hesan").click({ force: true });
               }
@@ -121,6 +123,21 @@ describe("aghsat", () => {
       cy.wait(500);
       cy.get(".form-check-input").click({ force: true });
       cy.get("confirmBtn").click({ force: true });
-    });                
+
+      cy.getAllLocalStorage()
+        .then((result) => {
+          return JSON.parse(result[BASE_URL].userInfo);
+        })
+        .then((getUserInfos) => {
+          cy.get(".removeArrowInput")
+            .type(getUserInfos.nationalCode)
+            .invoke("val")
+            .then((lenVal) => {
+              if (lenVal.length === 10) {
+                cy.contains("دریافت کد تایید").click({ force: true });
+              }
+            });
+        });
+    });
   });
 });
