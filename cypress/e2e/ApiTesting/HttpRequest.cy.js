@@ -4,6 +4,8 @@ describe("api", () => {
   const baseurl = "https://jsonplaceholder.typicode.com/posts/";
   const touristurl = "http://restapi.adequateshop.com/api/Tourist";
   const queryurl = "https://reqres.in/api/users";
+  const accessTokenUrl = "https://simple-books-api.glitch.me/api-clients/"
+  const accessToken = "https://simple-books-api.glitch.me/orders/"
 
   it("httprequest GET", () => {
     cy.request("GET", `${baseurl}1`).its("status").should("equal", 200);
@@ -134,4 +136,44 @@ describe("api", () => {
       expect(response.body.data[0]).has.property("first_name", "Michael");
     });
   });
+
+  let AuthToken;
+
+  it.only("access token", () => {
+
+    cy.request({
+        method: "POST",
+        url: accessTokenUrl,
+        headers:{
+            "Content-Types" : "application/json"
+        }, 
+        body : {
+            clientName: "ABC",
+            clientEmail: Math.random().toString(5).substring(2) + "@gmail.com",
+        }
+    })
+    .then(response => {
+        AuthToken = response.body.accessToken;
+        console.log(AuthToken);
+    })
+  })
+  it.only("create new order", () => {
+
+    cy.request({
+        method: "POST", 
+        url: accessToken,
+        headers: {
+            "Content-Types" : "application/json",
+            "Authorization": `Bearer ${AuthToken}`,
+        },
+        body : {
+            "bookId": 1,
+            "customerName": "xyz"
+        }
+    })
+    .then(response => {
+        expect(response.status).to.eq(201);
+        expect(response.body.created).to.eq(true);
+    })
+  })
 });
