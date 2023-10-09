@@ -294,10 +294,8 @@ describe("api", () => {
 
     const url = ["posts", "todos", "albums", "users"]
 
-    const randomIndex = (max) => {
-        return Math.floor(Math.random() * max) + 1;
-    };
-
+    const randomIndex = (max) => Math.floor(Math.random() * max) + 1;
+         
     const BASE_URL = "https://jsonplaceholder.typicode.com";
 
     cy.request({
