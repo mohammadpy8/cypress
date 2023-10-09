@@ -280,14 +280,10 @@ describe("api", () => {
         expect(response.status).to.eq(200);
         console.log((response.body));
         if(response.body.length === 100) {
-            response.body.map(items => {
-                const indexID = items.find(item => item.id === id);
-                console.log(indexID);
-                console.log(items.id)
-
-                const ID = items.find(item => item === id);
-                console.log(ID);
-            })
+            const filterProducts = response.body.filter(items => items.id === 10);
+            console.log(filterProducts, "one");
+            const filterdProductsChanges = response.body.filter(items => items.id !== id);
+            console.log(filterdProductsChanges, "other");
         } else {
             console.log("error");
         }
