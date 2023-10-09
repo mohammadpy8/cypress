@@ -4,8 +4,9 @@ describe("api", () => {
   const baseurl = "https://jsonplaceholder.typicode.com/posts/";
   const touristurl = "http://restapi.adequateshop.com/api/Tourist";
   const queryurl = "https://reqres.in/api/users";
-  const accessTokenUrl = "https://simple-books-api.glitch.me/api-clients/"
-  const accessToken = "https://simple-books-api.glitch.me/orders/"
+  const accessTokenUrl = "https://simple-books-api.glitch.me/api-clients/";
+  const accessToken = "https://simple-books-api.glitch.me/orders/";
+  const storeApi = "https://fakestoreapi.com/products";
 
   it("httprequest GET", () => {
     cy.request("GET", `${baseurl}1`).its("status").should("equal", 200);
@@ -140,59 +141,83 @@ describe("api", () => {
   let AuthToken;
 
   it.only("access token", () => {
-
     cy.request({
-        method: "POST",
-        url: accessTokenUrl,
-        headers:{
-            "Content-Types" : "application/json"
-        }, 
-        body : {
-            clientName: "ABC",
-            clientEmail: Math.random().toString(5).substring(2) + "@gmail.com",
-        }
-    })
-    .then(response => {
-        AuthToken = response.body.accessToken;
-        console.log(AuthToken);
-    })
-  })
+      method: "POST",
+      url: accessTokenUrl,
+      headers: {
+        "Content-Types": "application/json",
+      },
+      body: {
+        clientName: "ABC",
+        clientEmail: Math.random().toString(5).substring(2) + "@gmail.com",
+      },
+    }).then((response) => {
+      AuthToken = response.body.accessToken;
+      console.log(AuthToken);
+    });
+  });
   it.only("create new order", () => {
-
     cy.request({
-        method: "POST", 
-        url: accessToken,
-        headers: {
-            "Content-Types" : "application/json",
-            "Authorization": `Bearer ${AuthToken}`,
-        },
-        body : {
-            "bookId": 1,
-            "customerName": "xyz"
-        }
-    })
-    .then(response => {
-        expect(response.status).to.eq(201);
-        expect(response.body.created).to.eq(true);
-    })
-  })
+      method: "POST",
+      url: accessToken,
+      headers: {
+        "Content-Types": "application/json",
+        Authorization: `Bearer ${AuthToken}`,
+      },
+      body: {
+        bookId: 1,
+        customerName: "xyz",
+      },
+    }).then((response) => {
+      expect(response.status).to.eq(201);
+      expect(response.body.created).to.eq(true);
+    });
+  });
 
   it.only("fetch orders", () => {
+    cy.request({
+      method: "GET",
+      url: accessToken,
+      headers: {
+        "Content-Types": "application/json",
+        Authorization: `Bearer ${AuthToken}`,
+      },
+      cookies: {
+        cookieName: "mycookie",
+      },
+    }).then((response) => {
+      expect(response.status).to.eq(200);
+      expect(response.body).has.length(1);
+    });
+  });
+
+  it.only("parsing json", () => {
+    cy.request({
+      method: "GET",
+      url: storeApi,
+    }).then((response) => {
+      expect(response.status).to.eq(200);
+      expect(response.body).has.length(20);
+      expect(response.body[0].id).to.equal(1);
+    });
+  });
+
+  it.only("complex parsing json", () => {
+    const limitQs = { limit: 5 };
+    let totalPrice = 0;
 
     cy.request({
-        method: "GET",
-        url: accessToken,
-        headers: {
-            "Content-Types" : "application/json",
-            "Authorization": `Bearer ${AuthToken}`,
-        },
-        cookies: {
-            "cookieName": "mycookie"
-        }
-    })
-    .then(response => {
-        expect(response.status).to.eq(200);
-        expect(response.body).has.length(1);
-    })
-  })
+      method: "GET",
+      url: storeApi,
+      qs: limitQs,
+    }).then((response) => {
+      expect(response.status).to.eq(200);
+
+      response.body.forEach(items => {
+        totalPrice += items.price;
+        console.log(totalPrice);
+      })
+      expect(totalPrice).to.eq(899.23)
+    });
+  });
 });
