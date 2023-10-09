@@ -254,7 +254,7 @@ describe("api", () => {
     });
   });
 
-  it.only("Bearer access token", () => {
+  it("Bearer access token", () => {
     const token = "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";
 
     cy.request({
@@ -267,4 +267,30 @@ describe("api", () => {
       expect(response.status).to.eq(200);
     });
   });
+
+  it.only("requset chaining", () => {
+
+    const id = 10
+
+    cy.request({
+      method: "GET", 
+      url: baseurl, 
+    })
+    .then(response => {
+        expect(response.status).to.eq(200);
+        console.log((response.body));
+        if(response.body.length === 100) {
+            response.body.map(items => {
+                const indexID = items.find(item => item.id === id);
+                console.log(indexID);
+                console.log(items.id)
+
+                const ID = items.find(item => item === id);
+                console.log(ID);
+            })
+        } else {
+            console.log("error");
+        }
+    })
+  })
 });

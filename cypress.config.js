@@ -8,6 +8,7 @@ module.exports = defineConfig({
     experimentalStudio: true,
     video: true,
     videoCompression: 32,
+    videoCompression: true,
     viewportHeight: 900,
     viewportWidth: 550,
     videoUploadOnPasses: true,
