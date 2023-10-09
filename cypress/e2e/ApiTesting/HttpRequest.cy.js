@@ -93,5 +93,33 @@ describe("api", () => {
             expect(response.body.tourist_email).to.eq(requestBody.tourist_email);
             expect(response.body.tourist_location).to.eq(requestBody.tourist_location);
         })
+    });
+
+    it("json object", () => {
+
+        cy.fixture("tourist").then(data => {
+            const requestBody = data;
+
+            cy.request({
+                method:"POST",
+                url: touristurl,
+                body: requestBody
+            })
+            .then((response) => {
+                expect(response.status).to.eq(201);
+                expect(response.body.tourist_name).to.eq(requestBody.tourist_name);
+                expect(response.body.tourist_email).to.eq(requestBody.tourist_email);
+                expect(response.body.tourist_location).to.eq(requestBody.tourist_location);
+
+                expect(response.body).has.property("tourist_name", requestBody.tourist_name);
+                expect(response.body).has.property("tourist_email", requestBody.tourist_email);
+                expect(response.body).has.property("tourist_location", requestBody.tourist_location);
+            })
+        })
+
+    });
+
+    it("query params", () => {
+        
     })
 })
