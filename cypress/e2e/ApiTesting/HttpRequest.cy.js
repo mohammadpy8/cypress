@@ -306,5 +306,43 @@ describe("api", () => {
         console.log(response.body);
         expect(response.status).to.eq(200);
     })
+  });
+
+  it.only("test", () => {
+
+    cy.request({
+      method: "POST",
+      url: "https://jsonplaceholder.typicode.com/posts",
+      headers : {
+        "Content-type": "application/json",
+      },
+      body : {
+        title: "mm",
+        body: "112",
+        userId: 15000
+      }
+    })
+    .then(response => {
+      expect(response.status).to.eq(201);
+
+      console.log(response.body);
+
+    })
+
+    cy.request({
+      method: "DELETE",
+      url: "https://jsonplaceholder.typicode.com/posts/10",
+      headers : {
+        "Content-type": "application/json",
+      }
+    })
+    .then(response => {
+      expect(response.status).to.eq(200);
+
+      if(response.status === 20 ) {
+        
+      }
+      console.log(response.body);
+    })
   })
 });
