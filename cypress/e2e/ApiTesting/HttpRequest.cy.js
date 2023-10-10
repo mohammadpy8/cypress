@@ -123,7 +123,7 @@ describe("api", () => {
     });
   });
 
-  it.only("query params", () => {
+  it("query params", () => {
     const queryParams = { page: 2 };
 
     cy.request({
@@ -142,7 +142,7 @@ describe("api", () => {
 
   let AuthToken;
 
-  it.only("access token", () => {
+  it("access token", () => {
     cy.request({
       method: "POST",
       url: accessTokenUrl,
@@ -158,7 +158,7 @@ describe("api", () => {
       console.log(AuthToken);
     });
   });
-  it.only("create new order", () => {
+  it("create new order", () => {
     cy.request({
       method: "POST",
       url: accessToken,
@@ -176,7 +176,7 @@ describe("api", () => {
     });
   });
 
-  it.only("fetch orders", () => {
+  it("fetch orders", () => {
     cy.request({
       method: "GET",
       url: accessToken,
@@ -268,81 +268,164 @@ describe("api", () => {
     });
   });
 
-  it.only("requset chaining", () => {
-
-    const id = 10
+  it("requset chaining", () => {
+    const id = 10;
 
     cy.request({
-      method: "GET", 
-      url: baseurl, 
-    })
-    .then(response => {
-        expect(response.status).to.eq(200);
-        console.log((response.body));
-        if(response.body.length === 100) {
-            const filterProducts = response.body.filter(items => items.id === 10);
-            console.log(filterProducts, "one");
-            const filterdProductsChanges = response.body.filter(items => items.id !== id);
-            console.log(filterdProductsChanges, "other");
-        } else {
-            console.log("error");
-        }
-    })
+      method: "GET",
+      url: baseurl,
+    }).then((response) => {
+      expect(response.status).to.eq(200);
+      console.log(response.body);
+      if (response.body.length === 100) {
+        const filterProducts = response.body.filter((items) => items.id === id);
+        console.log(filterProducts, "one");
+        const filterdProductsChanges = response.body.filter(
+          (items) => items.id !== id
+        );
+        console.log(filterdProductsChanges, "other");
+      } else {
+        console.log("error");
+      }
+    });
   });
 
-  it.only("fetching", () => {
-
-    const url = ["posts", "todos", "albums", "users"]
+  it("fetching", () => {
+    const url = ["posts", "todos", "albums", "users"];
 
     const randomIndex = (max) => Math.floor(Math.random() * max) + 1;
-         
+
     const BASE_URL = "https://jsonplaceholder.typicode.com";
 
     cy.request({
-        method: "GET",
-        url: `${BASE_URL}/${url[randomIndex(3)]}`
-    })
-    .then(response => {
-        console.log(response.body);
-        expect(response.status).to.eq(200);
-    })
+      method: "GET",
+      url: `${BASE_URL}/${url[randomIndex(3)]}`,
+    }).then((response) => {
+      console.log(response.body);
+      expect(response.status).to.eq(200);
+    });
   });
 
-  it.only("test", () => {
-
+  it("test", () => {
     cy.request({
       method: "POST",
       url: "https://jsonplaceholder.typicode.com/posts",
-      headers : {
+      headers: {
         "Content-type": "application/json",
       },
-      body : {
+      body: {
         title: "mm",
         body: "112",
-        userId: 15000
-      }
-    })
-    .then(response => {
+        userId: 15000,
+      },
+    }).then((response) => {
       expect(response.status).to.eq(201);
 
-      console.log(response.body);
+      if (response.status === 201) {
+        const keyObject = Object.values(response.body);
+        keyObject.map((item) => {
+          console.log(item);
+        });
+      }
 
-    })
+      console.log(response.body);
+    });
 
     cy.request({
       method: "DELETE",
       url: "https://jsonplaceholder.typicode.com/posts/10",
-      headers : {
+      headers: {
         "Content-type": "application/json",
-      }
-    })
-    .then(response => {
+      },
+    }).then((response) => {
       expect(response.status).to.eq(200);
-
-      if(response.status === 20 ) {
-        
-      }
       console.log(response.body);
-    })
-  })
+    });
+  });
+
+  it.only("m", () => {
+    cy.visit("https://stage1.qhami.com/");
+    cy.wait(500);
+
+    cy.get('#profile > [href="/"] > .sc-gtcAbF').click({ force: true });
+    cy.wait(500);
+
+    cy.get(".flex-sb-m > div > .txt1").click({ force: true });
+    cy.wait(500);
+
+    cy.get(".login100-form-title-1").should("be.visible");
+    cy.wait(500);
+
+    cy.get("#username").click().type("125000");
+    cy.wait(500);
+
+    cy.get("#nationalCode").click().type("125000");
+    cy.wait(500);
+
+    cy.get("#captcha-pic").should("be.visible");
+    cy.wait(500);
+
+    cy.get("#reload-cap").should("be.visible").click({ force: true });
+    cy.wait(500);
+
+    cy.get("#reload-cap").click();
+    cy.wait(2000);
+
+    cy.get("#captchaValue").click().type("111111");
+    cy.wait(500);
+
+    cy.contains("button", "ارسال کد دوعاملی").click({ force: true });
+    cy.wait(500);
+
+    cy.get(".swal2-x-mark").should("be.visible");
+    cy.wait(500);
+
+    cy.get(".swal2-x-mark").should("be.visible");
+    cy.wait(500);
+
+    cy.then(() => {
+      if (cy.get(".swal2-x-mark").should("be.visible")) {
+        cy.log("success");
+      } else {
+        cy.log("error");
+        cy.pause();
+      }
+
+      cy.wait(500);
+
+      // alert("success");
+
+      cy.get(".swal2-confirm").click({ force: true });
+      cy.wait(500);
+
+      cy.get("a > img").should("exist").click({ force: true });
+      cy.wait(500);
+
+      cy.url().should("include", "login");
+      cy.wait(500);
+
+      cy.get("#username").should("exist").click().type("09550000012");
+      cy.wait(500);
+
+      cy.get("#password").should("exist").click().type("123456789");
+      cy.wait(500);
+
+      cy.get("#captchaValue").should("exist").click().type("111111");
+      cy.wait(500);
+
+      cy.contains("button", "ورود").should("be.visible").click({ force: true });
+      cy.wait(500);
+
+      cy.url().should("include", "qhami.com");
+      cy.wait(500);
+
+      let token;
+
+      cy.getAllLocalStorage().then((result) => {
+        let json = JSON.parse(result["https://stage1.qhami.com"].mresalatPwa);
+        token = json.token.access_token;
+        console.log(token);
+      });
+    });
+  });
 });
