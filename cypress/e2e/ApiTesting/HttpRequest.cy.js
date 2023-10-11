@@ -375,6 +375,7 @@ describe("api", () => {
     cy.wait(500);
 
     cy.contains("button", "ارسال کد دوعاملی").click({ force: true });
+    cy.log(cy.contains("button", "ارسال کد دوعاملی"))
     cy.wait(500);
 
     cy.get(".swal2-x-mark").should("be.visible");
@@ -421,11 +422,28 @@ describe("api", () => {
 
       let token;
 
-      cy.getAllLocalStorage().then((result) => {
-        let json = JSON.parse(result["https://stage1.qhami.com"].mresalatPwa);
-        token = json.token.access_token;
-        console.log(token);
-      });
+      // cy.getAllLocalStorage().then((result) => {
+      //   let json = JSON.parse(result["https://stage1.qhami.com"].mresalatPwa);
+      //   token = json.token.access_token;
+      //   console.log(token);
+      // });
+
+      cy.contains("ام حسام").click({force: true});
+
+      cy.then(() => {
+        cy.getAllLocalStorage().then(result => {
+          token = JSON.parse(result["https://stage1.qhami.com"].mresalatPwa).token.access_token;
+          // const getToken = JSON.parse(result["https://stage1.qhami.com"].mresalatPwa);
+          // token = getToken.token.access_token;
+          // console.log(token);
+          // console.log(result.mresalatPwa);
+          console.log(token);
+        })
+      })
+      .then(() => {
+        
+      })
+
     });
   });
 });

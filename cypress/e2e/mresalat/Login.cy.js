@@ -70,7 +70,7 @@ describe("login", () => {
       cy.then(() => {
         cy.getAllLocalStorage().then((result) => {
           console.log(result);
-          let json = JSON.parse(result["https://stage1.qhami.com"].mresalatPwa);
+          let json = JSON.parse(result[BASE_URL].mresalatPwa);
           console.log(json);
           token = json.token.access_token;
           console.log(token);
