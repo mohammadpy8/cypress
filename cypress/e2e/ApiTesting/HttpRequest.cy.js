@@ -375,7 +375,7 @@ describe("api", () => {
     cy.wait(500);
 
     cy.contains("button", "ارسال کد دوعاملی").click({ force: true });
-    cy.log(cy.contains("button", "ارسال کد دوعاملی"))
+    cy.log(cy.contains("button", "ارسال کد دوعاملی"));
     cy.wait(500);
 
     cy.get(".swal2-x-mark").should("be.visible");
@@ -395,6 +395,8 @@ describe("api", () => {
       cy.wait(500);
 
       // alert("success");
+
+      const url = "https://stage1.fardaap.com";
 
       cy.get(".swal2-confirm").click({ force: true });
       cy.wait(500);
@@ -428,22 +430,55 @@ describe("api", () => {
       //   console.log(token);
       // });
 
-      cy.contains("ام حسام").click({force: true});
+      cy.contains("ام حسام").click({ force: true });
 
-      cy.then(() => {
-        cy.getAllLocalStorage().then(result => {
-          token = JSON.parse(result["https://stage1.qhami.com"].mresalatPwa).token.access_token;
-          // const getToken = JSON.parse(result["https://stage1.qhami.com"].mresalatPwa);
-          // token = getToken.token.access_token;
-          // console.log(token);
-          // console.log(result.mresalatPwa);
-          console.log(token);
-        })
-      })
-      .then(() => {
-        
-      })
+      cy.origin(url, () => {
+        cy.then(() => {
+          cy.getAllLocalStorage().then((result) => {
+            token = JSON.parse(result["https://stage1.qhami.com"].mresalatPwa)
+              .token.access_token;
+            // const getToken = JSON.parse(result["https://stage1.qhami.com"].mresalatPwa);
+            // token = getToken.token.access_token;
+            // console.log(token);
+            // console.log(result.mresalatPwa);
+            console.log(token);
+          });
+        }).then(() => {
+          cy.wait(500);
+          cy.get("img[title='MQR']").click({ force: true });
 
+          cy.wait(500);
+
+          cy.get(".sc-bczRLJ").click({ force: true });
+          cy.wait(500);
+          // cy.get(".sc-bczRLJ VtMnX btn_mqr_scanner").click({force: true});
+          cy.get(".confirm_input_mqr").type(9);
+
+          cy.wait(500);
+
+          cy.contains("button", "ثبت کد").click({ force: true });
+
+          cy.request({
+            method: "GET",
+            url: `https://stage1api.qhami.com/mhesam/mqr/get-sat-info/${9}`,
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }).then((response) => {
+            cy.request({
+              method: "GET",
+              url: `https://stage1api.qhami.com/mhesam/mqr/mqr-credit?checkCreditRequestModel={"promotedMemberUserId":${
+                response.body.terminalFacilityId
+              },"parcelAmount":${1}}`,
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+            });
+          });
+        });
+      });
     });
   });
 });
