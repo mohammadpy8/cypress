@@ -475,30 +475,31 @@ describe("api", () => {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
               },
-            })
-            .then(response => {
+            }).then((response) => {
               let amountFinall = 0;
 
               cy.then(() => {
                 console.log(response);
                 console.log(response.body.userCreditModels);
-                response.body.userCreditModels.forEach(items => {
-                  amountFinall += items.availableAmount;
-                  console.log(amountFinall);
-                })
-                // .then(() => {
-                //   // cy.get('.input_mqr_credit').type(5000);
-                //   cy.wait(500);
-                // })
-                .then(() => {
-                  const handleSelectCredit = () => {
-                    cy.wait(500);
-                    cy.get("#id-undefined").click({force: true});
-                    cy.wait(500);
-                  }
-                })
-              })
-            })
+                response.body.userCreditModels
+                  .forEach((items) => {
+                    amountFinall += items.availableAmount;
+                    console.log(amountFinall);
+                  })
+                  // .then(() => {
+                  //   // cy.get('.input_mqr_credit').type(5000);
+                  //   cy.wait(500);
+                  // })
+                  .then(() => {
+                    const _handleSelectCredit = () => {
+                      cy.wait(500);
+                      cy.get("#id-undefined").click({ force: true });
+                      
+                      cy.wait(500);
+                    };
+                  });
+              });
+            });
           });
         });
       });
