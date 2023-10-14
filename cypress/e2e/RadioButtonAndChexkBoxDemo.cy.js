@@ -1,59 +1,7 @@
 /// <reference types="Cypress" />
-/// <reference types="cypress-xpath" />
-
-describe("check ui elemnt", () => {
-
-    it("checking radio button" ,() => {
-
-        cy.visit("https://itera-qa.azurewebsites.net/home/automation")
-
-        ////visibility for radio button
-
-        cy.get("input#male").should("be.visible")
-        cy.get("input#female").should("be.visible")
-        
-        //selected radio button
-
-        cy.get("input#male").check().should("be.checked");
-        cy.get("input#female").should("not.be.checked");
-
-        cy.get("input#female").check().should("be.checked");
-        cy.get("input#male").should("not.be.checked");
-    })
-
-    it("check box ui", () => {
-
-        cy.visit("https://itera-qa.azurewebsites.net/home/automation")
-
-        ///visibility
-
-        cy.get("input#monday").should("be.visible");
-
-        /////checked 
-
-        cy.get("input#monday").click().should("be.checked")
-
-        ///unSelected
-
-        cy.get("input#monday").uncheck().should("not.be.checked");
-
-        //selecting all check box
-
-        cy.get("input.form-check-input[input='checkbox']").check().should("be.checked");
-        cy.get("input.form-check-input[input='checkbox']").uncheck().should("not.be.checked");
-
-        //selected first and last check box
-
-        cy.get("input.form-check-input[input='checkbox']").first().check().should("be.checked")
-        cy.get("input.form-check-input[input='checkbox']").last().check().should("be.checked")
-    })
-
-})
-
-/// <reference types="Cypress" />
 
 describe("karafrini ejtamaie", () => {
-    const main_url = "https://stage1.qhami.com/";
+    const main_url = "https://stage1.qhami.com";
   
     it("karafrini", () => {
   
@@ -76,15 +24,22 @@ describe("karafrini ejtamaie", () => {
   
       let nationalCode;
       let username;
+      let token;
   
       cy.then(() => {
         cy.getAllLocalStorage().then(result => {
+  
+          console.log(result);
           
-          const getNationalCode = JSON.parse(result["https://stage1.qhami.com"].userInfo);/////گرفتن کل اطلاعات کاربر
+          const getNationalCode = JSON.parse(result[main_url].userInfo);/////گرفتن کل اطلاعات کاربر
+          const getToeknUser = JSON.parse(result[main_url].mresalatPwa); ////گرفتن اطلاعات توکن
+          console.log(getToeknUser);
           const getValusOfObjects = Object.values(getNationalCode); ////گرفتن تمام value های ابجکت
           
           username = getValusOfObjects[2]; ////ست کردن کاربر
           nationalCode = getValusOfObjects[3]; ////ست کردن کد ملی
+          token = getToeknUser.token.access_token; ////ست کردن توکن
+          console.log(token);
   
           console.log(username, nationalCode);///// چک کردن کد ملی و نام کاربری
         })
@@ -94,14 +49,25 @@ describe("karafrini ejtamaie", () => {
           cy.pause(); /// تا اطلاعات لود بشه
           cy.request({ //////گرفتن اطلاعات کاربران
             method: "GET",
-            url: 
-            "https://stage1api.qhami.com/mems/user-profile/?searchFilterModel=%7B%22searchFilterBoxList%22%3A%5B%7B%22restrictionList%22%3A%5B%7B%22fieldName%22%3A%22selected_role_id%22%2C%22fieldOperation%22%3A%22EQUAL%22%2C%22fieldValue%22%3A46%2C%22nextConditionOperator%22%3A%22AND%22%7D%5D%7D%2C%7B%22restrictionList%22%3A%5B%5D%7D%5D%2C%22sortList%22%3A%5B%7B%22fieldName%22%3A%22id%22%2C%22type%22%3A%22DSC%22%7D%5D%2C%22page%22%3A0%2C%22rows%22%3A10%7D",
+            url: "https://stage1.qhami.com/profile/memberShip",
             headers: {
-              "Content-Type": "application/json"
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+              
             }
           })
-          .then(response => {
-            console.log(response);
+          .then(() => {
+            cy.request({
+              method: "GET",
+              url: "https://stage1api.qhami.com/mems/user-profile/?searchFilterModel=%7B%22searchFilterBoxList%22%3A%5B%7B%22restrictionList%22%3A%5B%7B%22fieldName%22%3A%22selected_role_id%22%2C%22fieldOperation%22%3A%22EQUAL%22%2C%22fieldValue%22%3A46%2C%22nextConditionOperator%22%3A%22AND%22%7D%5D%7D%2C%7B%22restrictionList%22%3A%5B%5D%7D%5D%2C%22sortList%22%3A%5B%7B%22fieldName%22%3A%22id%22%2C%22type%22%3A%22DSC%22%7D%5D%2C%22page%22%3A0%2C%22rows%22%3A10%7D",
+              headers : {
+                "Content-Type": "application/json", // تنظیم هدر Content-Type
+                Authorization: `Bearer ${token}`,
+              }
+            })
+            .then(response => {
+              console.log(response);
+            })
           })
         })
       })
